@@ -1,5 +1,5 @@
 /**
- * @todo YOU HAVE TO IMPLEMENT THE DELETE AND SAVE TASK ENDPOINT,
+ * @done YOU HAVE TO IMPLEMENT THE DELETE AND SAVE TASK ENDPOINT,
  * A TASK CANNOT BE UPDATED IF THE TASK NAME DID NOT CHANGE,
  * YOU'VE TO CONTROL THE BUTTON STATE ACCORDINGLY
  */
@@ -12,15 +12,16 @@ import { Task } from '../index';
 const TodoPage = () => {
   const api = useFetch();
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [originalTasks, setOriginalTasks] = useState<Task[]>([]);
 
   const handleFetchTasks = async () => {
     const response = await api.get('/tasks');
     setTasks(response);
-    console.log("response", response);
+    setOriginalTasks(response);
   }
 
   const handleDelete = async (id: number) => {
-    // @todo IMPLEMENT HERE : DELETE THE TASK & REFRESH ALL THE TASKS, DON'T FORGET TO ATTACH THE FUNCTION TO THE APPROPRIATE BUTTON
+    // @done IMPLEMENT HERE : DELETE THE TASK & REFRESH ALL THE TASKS, DON'T FORGET TO ATTACH THE FUNCTION TO THE APPROPRIATE BUTTON
     try {
       await api.delete(`/tasks/${id}`);
       await handleFetchTasks();
@@ -30,10 +31,9 @@ const TodoPage = () => {
   }
 
   const handleSave = async (task: Partial<Task>) => {
-    // @todo IMPLEMENT HERE : SAVE THE TASK & REFRESH ALL THE TASKS, DON'T FORGET TO ATTACH THE FUNCTION TO THE APPROPRIATE BUTTON
+    // @done IMPLEMENT HERE : SAVE THE TASK & REFRESH ALL THE TASKS, DON'T FORGET TO ATTACH THE FUNCTION TO THE APPROPRIATE BUTTON
     try {
       if (task.id) {
-        console.info("Attempting to modify the name of the task");
         await api.patch(`/tasks/${task.id}`, { id: task.id, name: task.name });
       } else {
         await api.post('/tasks', { name: task.name });
@@ -75,7 +75,7 @@ const TodoPage = () => {
                 <IconButton
                   color="success"
                   onClick={() => handleSave(task)}
-                
+                  disabled={originalTasks.find(t => t.id === task.id)?.name === task.name}
                 >
                   <Check />
                 </IconButton>
