@@ -29,8 +29,9 @@ export default class TaskController {
     }
 
   @Patch('/tasks/:id')
-  async update(@Body() dto: SaveTaskDto) {
+  async update(@Param('id') id: string, @Body() dto: SaveTaskDto) {
     // @todo YOU MUST FOLLOW THE SAME IMPLEMENTATION AS OTHER ENDPOINTS
+    return (await this.useCaseFactory.create(SaveTaskUseCase)).handle({ ...dto, id: Number(id) });
   }
 
   @Delete('/tasks/:id')
