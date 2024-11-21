@@ -13,14 +13,34 @@ const TodoPage = () => {
   const api = useFetch();
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  const handleFetchTasks = async () => setTasks(await api.get('/tasks'));
+  const handleFetchTasks = async () => {
+    const response = await api.get('/tasks');
+    setTasks(response);
+    console.log("response", response);
+  }
 
   const handleDelete = async (id: number) => {
     // @todo IMPLEMENT HERE : DELETE THE TASK & REFRESH ALL THE TASKS, DON'T FORGET TO ATTACH THE FUNCTION TO THE APPROPRIATE BUTTON
+    try {
+      await api.delete(`/tasks/${id}`);
+      await handleFetchTasks();
+    } catch (error) {
+      console.error('Failed to delete the task:', error);
+    }
   }
 
-  const handleSave = async () => {
+  const handleSave = async (task: Partial<Task>) => {
     // @todo IMPLEMENT HERE : SAVE THE TASK & REFRESH ALL THE TASKS, DON'T FORGET TO ATTACH THE FUNCTION TO THE APPROPRIATE BUTTON
+    try {
+      if (task.id) {
+        await api.put(`/tasks/${task.id}`, { id: task.id, name: task.name});
+      } else {
+        await api.post('/tasks', { name: task.name });
+      }
+      await handleFetchTasks();
+    } catch (error) {
+      console.error('Failed to save the task:', error);
+    }
   }
 
   useEffect(() => {
@@ -44,7 +64,7 @@ const TodoPage = () => {
                 <IconButton color="success" disabled>
                   <Check />
                 </IconButton>
-                <IconButton color="error" onClick={() => {}}>
+                <IconButton color="error" onClick={() => {handleDelete(task.id)}}>
                   <Delete />
                 </IconButton>
               </Box>
@@ -53,7 +73,7 @@ const TodoPage = () => {
         }
 
         <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-          <Button variant="outlined" onClick={() => {}}>Ajouter une tâche</Button>
+          <Button variant="outlined" onClick={() => handleSave({ name: "New Task Name" })}>Ajouter une tâche</Button>
         </Box>
       </Box>
     </Container>
