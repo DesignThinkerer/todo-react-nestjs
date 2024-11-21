@@ -14,7 +14,19 @@ export default class SaveTaskUseCase
     // Validate the name field
     if (typeof dto.name !== 'string' || dto.name.trim().length === 0) {
       throw new Error('Validation failed: Name must be a non-empty string.');
-    }    
+    }
+    // If the task exist, check if the name is changed before proceding
+    if(dto.id){
+      const existingTask = await this.taskRepository.findById(dto.id);
+
+      if (!existingTask) {
+        throw new BadRequestException('Task with id ${dto.id} not found.');
+      }
+
+      if (existingTask.name === dto.name) {
+        throw new BadRequestException('No changes detected: The task name for id ${dto.id} is the same.');
+      }
+    }
 
     try {
       // Save the task and return the result
@@ -23,7 +35,7 @@ export default class SaveTaskUseCase
         name: dto.name,
       });
     } catch (error) {
-      throw new BadRequestException(`Failed to save task: ${error.message}`);
+      throw new BadRequestException(`Failed to save task for id ${dto.id}: ${error.message}`);
     }
   }
 }
