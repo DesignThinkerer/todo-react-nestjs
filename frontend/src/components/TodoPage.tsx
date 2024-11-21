@@ -33,7 +33,8 @@ const TodoPage = () => {
     // @todo IMPLEMENT HERE : SAVE THE TASK & REFRESH ALL THE TASKS, DON'T FORGET TO ATTACH THE FUNCTION TO THE APPROPRIATE BUTTON
     try {
       if (task.id) {
-        await api.put(`/tasks/${task.id}`, { id: task.id, name: task.name});
+        console.info("Attempting to modify the name of the task");
+        await api.put(`/tasks/${task.id}`, { id: task.id, name: task.name });
       } else {
         await api.post('/tasks', { name: task.name });
       }
@@ -58,13 +59,27 @@ const TodoPage = () => {
       <Box justifyContent="center" mt={5} flexDirection="column">
         {
           tasks?.map((task) => (
-            <Box display="flex" justifyContent="center" alignItems="center" mt={2} gap={1} width="100%">
-              <TextField size="small" value={task.name} fullWidth sx={{ maxWidth: 350 }} />
+            <Box display="flex" key={task.id} justifyContent="center" alignItems="center" mt={2} gap={1} width="100%">
+              <TextField
+                size="small"
+                value={task.name}
+                fullWidth sx={{ maxWidth: 350 }}
+                onChange={(e) => {
+                  const updatedTasks = tasks.map(t =>
+                    t.id === task.id ? { ...t, name: e.target.value } : t
+                  );
+                  setTasks(updatedTasks);
+                }}
+              />
               <Box>
-                <IconButton color="success" disabled>
+                <IconButton
+                  color="success"
+                  onClick={() => handleSave(task)}
+
+                >
                   <Check />
                 </IconButton>
-                <IconButton color="error" onClick={() => {handleDelete(task.id)}}>
+                <IconButton color="error" onClick={() => { handleDelete(task.id) }}>
                   <Delete />
                 </IconButton>
               </Box>
