@@ -34,7 +34,7 @@ const TodoPage = () => {
     try {
       if (task.id) {
         console.info("Attempting to modify the name of the task");
-        await api.put(`/tasks/${task.id}`, { id: task.id, name: task.name });
+        await api.patch(`/tasks/${task.id}`, { id: task.id, name: task.name });
       } else {
         await api.post('/tasks', { name: task.name });
       }
@@ -75,7 +75,7 @@ const TodoPage = () => {
                 <IconButton
                   color="success"
                   onClick={() => handleSave(task)}
-
+                
                 >
                   <Check />
                 </IconButton>
