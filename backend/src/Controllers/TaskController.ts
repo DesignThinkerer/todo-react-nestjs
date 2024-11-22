@@ -24,13 +24,13 @@ export default class TaskController {
 
   @Post('/tasks')
   async create(@Body() dto: SaveTaskDto) {
-    // @todo YOU MUST FOLLOW THE SAME IMPLEMENTATION AS OTHER ENDPOINTS
+    // @done YOU MUST FOLLOW THE SAME IMPLEMENTATION AS OTHER ENDPOINTS
     return (await this.useCaseFactory.create(SaveTaskUseCase)).handle(dto);
     }
 
   @Patch('/tasks/:id')
   async update(@Param('id') id: string, @Body() dto: SaveTaskDto) {
-    // @todo YOU MUST FOLLOW THE SAME IMPLEMENTATION AS OTHER ENDPOINTS
+    // @done YOU MUST FOLLOW THE SAME IMPLEMENTATION AS OTHER ENDPOINTS
     return (await this.useCaseFactory.create(SaveTaskUseCase)).handle({ ...dto, id: Number(id) });
   }
 
