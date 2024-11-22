@@ -1,3 +1,4 @@
-Get started by customizing your environment (defined in the .idx/dev.nix file) with the tools and IDE extensions you'll need for your project!
 
-Learn more at https://developers.google.com/idx/guides/customize-idx-env
+
+https://github.com/user-attachments/assets/f3bdd5c1-28fd-47a7-8299-8a586a70b916
+
